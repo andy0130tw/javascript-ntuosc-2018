@@ -1,0 +1,16 @@
+{
+  "name": "javascript-ntuosc-2018",
+  "version": "0.0.1",
+  "description": "owo",
+  "main": "index.js",
+  "repository": "https://github.com/andy0130tw/javascript-ntuosc-2018",
+  "author": "Andy Pan <andypan@ntuosc.org>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@koa/cors": "2",
+    "koa": "^2.6.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0"
+  }
+}
