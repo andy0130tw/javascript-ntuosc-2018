@@ -62,7 +62,7 @@ function authenticateMiddleware(ctx, next) {
 router.use(async (ctx, next) => {
   return next()
     .catch(err => {
-      console.log('Request errored:', err.message)
+      console.log('Request errored:', err.message, err.stack)
       ctx.body = { ok: false, err: `Error: ${err.message}` }
     })
 
@@ -77,7 +77,7 @@ router.use(async (ctx, next) => {
   */
 })
 
-router.get('/', ctx => {
+router.get('/', corsMiddleware, ctx => {
   ctx.body = `Hello world`
 })
 
@@ -122,7 +122,7 @@ router.get('/poll',
     }, TIMEOUT_AFTER)
 
     // if the poll is resolved, clear the timeout
-    ctx.user.poll.then(arrMsg => {
+    poll.then(arrMsg => {
       ctx.user.emitter = null
       ctx.body = arrMsg
       clearTimeout(t)

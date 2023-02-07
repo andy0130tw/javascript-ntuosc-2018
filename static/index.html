@@ -14,11 +14,75 @@
   </div>
 
   <script>
-    fetch('http://localhost:3000/poll')
+    let token = null;
+
+    let pollLoop = (token, callback) => {
+        return fetch(`http://localhost:3000/poll?token=${token}`)
+        .then(resp => resp.json())
+        .then(obj => {
+          callback(obj)
+          return new Promise((resolve, reject) => {
+            setTimeout(resolve, 5000)
+          })
+        })
+        //.then(() => {
+        //  return pollLoop(token, callback)
+        //})
+    }
+
+    let p = fetch('http://localhost:3000/')
+    p.then(resp => resp.text())
+    .then(text => {
+        document.getElementById('textbox').innerHTML = text;
+        return fetch('http://localhost:3000/join', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: 'name=asd'
+        })
+        .then(resp => resp.json())
+    })
+    .then(obj => {
+        token = obj.token
+        return fetch(`http://localhost:3000/chat?token=${token}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+            body: `message=<b>${new Date().toString()}</b>`
+        })
+        .then(resp => resp.json())
+    })
+    .then(obj => {
+      // document.getElementById('textbox').textContent = JSON.stringify(obj)
+      return fetch(`http://localhost:3000/getLatest?token=${token}`)
+        .then(resp => resp.json())
+    })
+    .then(obj => {
+      let history = obj.history
+      let elem = document.getElementById('textbox')
+      elem.innerHTML = ''
+        
+      for (let i = 0; i < history.length; i++) {
+          elem.innerHTML += `${history[i].name} says "${history[i].message}" <br>`
+      }
+    })
+    /*.then(() => {
+      return pollLoop(token, arrMsg => {
+        console.log('recv', arrMsg)
+      })
+    })*/
+
+
+    /*fetch('http://localhost:3000/join')
+    .then(resp => resp.json())
+
+    fetch('http://localhost:3000/getLatest')
     .then(resp => resp.json())
     .then(obj => {
       document.getElementById('textbox').textContent = JSON.stringify(obj)
-    })
+    })*/
   </script>
 </body>
 </html>
